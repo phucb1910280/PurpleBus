@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "326450697983",
+    "project_id": "purplebus-ee57f",
+    "storage_bucket": "purplebus-ee57f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:326450697983:android:6bfeed229a025fd4eedeca",
+        "android_client_info": {
+          "package_name": "com.example.bluebus"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvP6qcMkp0Rdmicnbr1_4PB_hEXf_rXNA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

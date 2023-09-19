@@ -2,6 +2,8 @@ import 'package:bluebus/shared/mcolors.dart';
 import 'package:bluebus/shared/mtext.dart';
 import 'package:bluebus/shared/sbox.dart';
 import 'package:bluebus/ui/auth/register_screen.dart';
+import 'package:bluebus/ui/main/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -219,8 +221,25 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           const SBox(height: 25, width: 0),
           ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {}
+            onPressed: () async {
+              if (_formKey.currentState!.validate()) {
+                try {
+                  await FirebaseAuth.instance.signInWithEmailAndPassword(
+                      email: emailCtr.text.trim(), password: pwCtr.text.trim());
+                  if (FirebaseAuth.instance.currentUser != null) {
+                    if (context.mounted) {
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const HomePage(),
+                          ),
+                          (route) => false);
+                    }
+                  }
+                } catch (e) {
+                  debugPrint(e.toString());
+                }
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: MColors.primary,

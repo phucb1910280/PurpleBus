@@ -1,7 +1,11 @@
+import 'package:bluebus/models/user.dart';
 import 'package:bluebus/shared/mcolors.dart';
 import 'package:bluebus/shared/mtext.dart';
 import 'package:bluebus/shared/sbox.dart';
 import 'package:bluebus/ui/auth/login_screen.dart';
+import 'package:bluebus/ui/main/home.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -25,6 +29,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
     pwCtr.dispose();
     confPWCtr.dispose();
     super.dispose();
+  }
+
+  Future addUserDetail(
+      String fullName, String phoneNumber, String email, String address) async {
+    final CollectionReference userRef =
+        FirebaseFirestore.instance.collection('Users');
+    var user = Users(
+      fullName: fullName,
+      address: address,
+      email: email,
+      phoneNumber: phoneNumber,
+      registerDay: DateTime.now(),
+    );
+    Map<String, dynamic> userData = user.toJson();
+    await userRef.doc(email).set(userData);
   }
 
   @override
@@ -102,10 +121,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
           TextFormField(
             controller: emailCtr,
             obscureText: false,
+            maxLength: 50,
             style: const TextStyle(
               fontSize: 18,
             ),
             decoration: InputDecoration(
+                counterText: "",
                 hintText: "Email",
                 hintStyle: const TextStyle(
                   fontSize: 17,
@@ -148,7 +169,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               if (value!.isEmpty) {
                 return "Vui lòng nhập email";
               }
-              if (!value.contains("@") || !value.contains(".")) {
+              if (!value.contains("@") || !value.contains(".com")) {
                 return "Hãy nhập email hợp lệ";
               }
               return null;
@@ -216,10 +237,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
           TextFormField(
             controller: confPWCtr,
             obscureText: !showConfPW,
+            maxLength: 16,
             style: const TextStyle(
               fontSize: 18,
             ),
             decoration: InputDecoration(
+                counterText: "",
                 hintText: "Nhập lại mật khẩu",
                 hintStyle: const TextStyle(
                   fontSize: 17,
@@ -270,8 +293,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
           const SBox(height: 25, width: 0),
           ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {}
+            onPressed: () async {
+              if (_formKey.currentState!.validate()) {
+                try {
+                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                      email: emailCtr.text.trim(), password: pwCtr.text.trim());
+                  addUserDetail("", "", emailCtr.text.trim(), "");
+                  if (FirebaseAuth.instance.currentUser != null) {
+                    if (context.mounted) {
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomePage()),
+                          (route) => false);
+                    }
+                  }
+                } catch (e) {
+                  debugPrint(e.toString());
+                }
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: MColors.primary,
