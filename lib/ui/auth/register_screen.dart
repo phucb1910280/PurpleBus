@@ -1,9 +1,9 @@
 import 'package:bluebus/models/user.dart';
 import 'package:bluebus/shared/mcolors.dart';
 import 'package:bluebus/shared/mtext.dart';
+import 'package:bluebus/shared/navigator.dart';
 import 'package:bluebus/shared/sbox.dart';
 import 'package:bluebus/ui/auth/login_screen.dart';
-import 'package:bluebus/ui/main/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +41,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       email: email,
       phoneNumber: phoneNumber,
       registerDay: DateTime.now(),
+      profilePhoto:
+          "https://firebasestorage.googleapis.com/v0/b/purplebus-ee57f.appspot.com/o/default_avatar.png?alt=media&token=14653759-47ca-4964-995d-63c0f628e84d&_gl=1*1xdiu81*_ga*NjgzODM5Njg5LjE2ODQ4OTgwNTA.*_ga_CW55HF8NVT*MTY5NjE3NzMzNS4yOS4xLjE2OTYxNzczNDcuNDguMC4w",
     );
     Map<String, dynamic> userData = user.toJson();
     await userRef.doc(email).set(userData);
@@ -184,45 +186,46 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             maxLength: 16,
             decoration: InputDecoration(
-                counterText: "",
-                hintText: "Mật khẩu từ 8-16 ký tự",
-                hintStyle: const TextStyle(
-                  fontSize: 17,
+              counterText: "",
+              hintText: "Mật khẩu từ 8-16 ký tự",
+              hintStyle: const TextStyle(
+                fontSize: 17,
+              ),
+              prefixIcon: const Icon(
+                Icons.lock,
+                color: MColors.primary,
+              ),
+              suffixIcon: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    showPW = !showPW;
+                  });
+                },
+                child: Icon(
+                  !showPW ? Icons.visibility : Icons.visibility_off,
+                  color: MColors.secondary,
                 ),
-                prefixIcon: const Icon(
-                  Icons.lock,
-                  color: MColors.primary,
-                ),
-                suffixIcon: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      showPW = !showPW;
-                    });
-                  },
-                  child: Icon(
-                    !showPW ? Icons.visibility : Icons.visibility_off,
-                    color: MColors.secondary,
-                  ),
-                ),
-                border: InputBorder.none,
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: MColors.primary),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: MColors.primaryContainer),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: MColors.error),
-                ),
-                focusedErrorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: MColors.error),
-                ),
-                filled: true,
-                fillColor: MColors.primaryContainer),
+              ),
+              border: InputBorder.none,
+              focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: MColors.primary),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: const BorderSide(color: MColors.primaryContainer),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: const BorderSide(color: MColors.error),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: const BorderSide(color: MColors.error),
+              ),
+              filled: true,
+              fillColor: MColors.primaryContainer,
+            ),
             validator: (value) {
               if (value!.isEmpty) {
                 return "Vui lòng nhập mật khẩu";
@@ -242,45 +245,46 @@ class _RegisterScreenState extends State<RegisterScreen> {
               fontSize: 18,
             ),
             decoration: InputDecoration(
-                counterText: "",
-                hintText: "Nhập lại mật khẩu",
-                hintStyle: const TextStyle(
-                  fontSize: 17,
+              counterText: "",
+              hintText: "Nhập lại mật khẩu",
+              hintStyle: const TextStyle(
+                fontSize: 17,
+              ),
+              prefixIcon: const Icon(
+                Icons.lock,
+                color: MColors.primary,
+              ),
+              suffixIcon: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    showConfPW = !showConfPW;
+                  });
+                },
+                child: Icon(
+                  !showPW ? Icons.visibility : Icons.visibility_off,
+                  color: MColors.secondary,
                 ),
-                prefixIcon: const Icon(
-                  Icons.lock,
-                  color: MColors.primary,
-                ),
-                suffixIcon: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      showConfPW = !showConfPW;
-                    });
-                  },
-                  child: Icon(
-                    !showPW ? Icons.visibility : Icons.visibility_off,
-                    color: MColors.secondary,
-                  ),
-                ),
-                border: InputBorder.none,
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: MColors.primary),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: MColors.primaryContainer),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: MColors.error),
-                ),
-                focusedErrorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: MColors.error),
-                ),
-                filled: true,
-                fillColor: MColors.primaryContainer),
+              ),
+              border: InputBorder.none,
+              focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: MColors.primary),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: const BorderSide(color: MColors.primaryContainer),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: const BorderSide(color: MColors.error),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: const BorderSide(color: MColors.error),
+              ),
+              filled: true,
+              fillColor: MColors.primaryContainer,
+            ),
             validator: (value) {
               if (value!.isEmpty) {
                 return "Vui lòng nhập lại mật khẩu";
@@ -302,14 +306,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   if (FirebaseAuth.instance.currentUser != null) {
                     if (context.mounted) {
                       Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomePage()),
-                          (route) => false);
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => NavigatorRoute()),
+                        (route) => false,
+                      );
                     }
                   }
                 } catch (e) {
-                  debugPrint(e.toString());
+                  debugPrint(
+                    e.toString(),
+                  );
                 }
               }
             },
@@ -319,7 +326,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
               minimumSize: const Size.fromHeight(55),
             ),
             child: const MText(
-                content: "Đăng ký", size: 20, bold: false, italic: false),
+              content: "Đăng ký",
+              size: 20,
+              bold: false,
+              italic: false,
+            ),
           )
         ],
       ),

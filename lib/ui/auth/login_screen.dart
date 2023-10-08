@@ -1,8 +1,8 @@
 import 'package:bluebus/shared/mcolors.dart';
 import 'package:bluebus/shared/mtext.dart';
+import 'package:bluebus/shared/navigator.dart';
 import 'package:bluebus/shared/sbox.dart';
 import 'package:bluebus/ui/auth/register_screen.dart';
-import 'package:bluebus/ui/main/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -118,44 +118,45 @@ class _LoginScreenState extends State<LoginScreen> {
               fontSize: 18,
             ),
             decoration: InputDecoration(
-                hintText: "Email",
-                hintStyle: const TextStyle(
-                  fontSize: 17,
+              hintText: "Email",
+              hintStyle: const TextStyle(
+                fontSize: 17,
+              ),
+              prefixIcon: const Icon(
+                Icons.email,
+                color: MColors.primary,
+              ),
+              suffixIcon: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    emailCtr.text = "";
+                  });
+                },
+                child: const Icon(
+                  Icons.clear,
+                  color: MColors.secondary,
                 ),
-                prefixIcon: const Icon(
-                  Icons.email,
-                  color: MColors.primary,
-                ),
-                suffixIcon: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      emailCtr.text = "";
-                    });
-                  },
-                  child: const Icon(
-                    Icons.clear,
-                    color: MColors.secondary,
-                  ),
-                ),
-                border: InputBorder.none,
-                focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: MColors.primary),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: MColors.primaryContainer),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: MColors.error),
-                ),
-                focusedErrorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: MColors.error),
-                ),
-                filled: true,
-                fillColor: MColors.primaryContainer),
+              ),
+              border: InputBorder.none,
+              focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: MColors.primary),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: const BorderSide(color: MColors.primaryContainer),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: const BorderSide(color: MColors.error),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: const BorderSide(color: MColors.error),
+              ),
+              filled: true,
+              fillColor: MColors.primaryContainer,
+            ),
             validator: (value) {
               if (value!.isEmpty) {
                 return "Vui lòng nhập email";
@@ -229,11 +230,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   if (FirebaseAuth.instance.currentUser != null) {
                     if (context.mounted) {
                       Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomePage(),
-                          ),
-                          (route) => false);
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NavigatorRoute(),
+                        ),
+                        (route) => false,
+                      );
                     }
                   }
                 } catch (e) {

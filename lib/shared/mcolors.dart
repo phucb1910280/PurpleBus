@@ -6,6 +6,7 @@ class MColors extends Material {
   static const secondary = Color(0xFF625B71);
   static const error = Color(0xFFB3261E);
   static const background = Color(0xFFFFFFFF);
+  static const tertiaryContainer = Color(0xFFFFD8E4);
 
   const MColors({super.key});
 }

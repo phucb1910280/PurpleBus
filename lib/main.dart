@@ -1,4 +1,6 @@
+import 'package:bluebus/shared/navigator.dart';
 import 'package:bluebus/ui/auth/welcome_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,13 +23,15 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'PurpleBus',
       theme: ThemeData(
-        textTheme: GoogleFonts.ralewayTextTheme(
+        textTheme: GoogleFonts.quicksandTextTheme(
           Theme.of(context).textTheme,
         ),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const WelcomeScreen(),
+      home: FirebaseAuth.instance.currentUser != null
+          ? NavigatorRoute()
+          : const WelcomeScreen(),
     );
   }
 }
