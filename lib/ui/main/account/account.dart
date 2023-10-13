@@ -1,4 +1,3 @@
-import 'package:bluebus/models/user.dart';
 import 'package:bluebus/shared/mcolors.dart';
 import 'package:bluebus/shared/mtext.dart';
 import 'package:bluebus/shared/sbox.dart';
@@ -17,41 +16,6 @@ class AccountSceen extends StatefulWidget {
 }
 
 class _AccountSceenState extends State<AccountSceen> {
-  var user = Users(
-    fullName: "",
-    address: "",
-    email: "",
-    phoneNumber: "",
-    profilePhoto:
-        "https://firebasestorage.googleapis.com/v0/b/purplebus-ee57f.appspot.com/o/default_avatar.png?alt=media&token=14653759-47ca-4964-995d-63c0f628e84d&_gl=1*1xdiu81*_ga*NjgzODM5Njg5LjE2ODQ4OTgwNTA.*_ga_CW55HF8NVT*MTY5NjE3NzMzNS4yOS4xLjE2OTYxNzczNDcuNDguMC4w",
-  );
-
-  @override
-  void initState() {
-    // loadUserData();
-    super.initState();
-  }
-
-  // Future loadUserData() async {
-  //   var data = await FirebaseFirestore.instance
-  //       .collection("Users")
-  //       .doc(FirebaseAuth.instance.currentUser!.email)
-  //       .get();
-  //   if (data.exists) {
-  //     var tempUser = Users(
-  //         fullName: data["fullName"],
-  //         address: data["address"],
-  //         email: data["email"],
-  //         phoneNumber: data["phoneNumber"],
-  //         isNewUser: data["isNewUser"],
-  //         point: data["point"],
-  //         profilePhoto: data["profilePhoto"]);
-  //     setState(() {
-  //       user = tempUser;
-  //     });
-  //   }
-  // }
-
   signOut() async {
     await FirebaseAuth.instance.signOut();
     if (FirebaseAuth.instance.currentUser == null) {
@@ -174,7 +138,8 @@ class _AccountSceenState extends State<AccountSceen> {
                         children: [
                           Row(
                             children: [
-                              TextButton(
+                              TextButton.icon(
+                                icon: const Icon(Icons.edit),
                                 onPressed: () {
                                   Navigator.push(
                                     context,
@@ -183,7 +148,7 @@ class _AccountSceenState extends State<AccountSceen> {
                                     ),
                                   );
                                 },
-                                child: const MText(
+                                label: const MText(
                                   content: "Cập nhật thông tin",
                                   size: 20,
                                   bold: false,
@@ -192,11 +157,15 @@ class _AccountSceenState extends State<AccountSceen> {
                               ),
                             ],
                           ),
+                          const SizedBox(
+                            height: 5,
+                          ),
                           Row(
                             children: [
-                              TextButton(
+                              TextButton.icon(
                                 onPressed: () {},
-                                child: const MText(
+                                icon: const Icon(Icons.stars),
+                                label: const MText(
                                   content: "Điểm khuyến mãi",
                                   size: 20,
                                   bold: false,
@@ -205,11 +174,15 @@ class _AccountSceenState extends State<AccountSceen> {
                               ),
                             ],
                           ),
+                          const SizedBox(
+                            height: 5,
+                          ),
                           Row(
                             children: [
-                              TextButton(
+                              TextButton.icon(
                                 onPressed: () {},
-                                child: const MText(
+                                icon: const Icon(Icons.notifications),
+                                label: const MText(
                                   content: "Thông báo",
                                   size: 20,
                                   bold: false,
@@ -218,11 +191,15 @@ class _AccountSceenState extends State<AccountSceen> {
                               ),
                             ],
                           ),
+                          const SizedBox(
+                            height: 5,
+                          ),
                           Row(
                             children: [
-                              TextButton(
+                              TextButton.icon(
                                 onPressed: () {},
-                                child: const MText(
+                                icon: const Icon(Icons.local_activity),
+                                label: const MText(
                                   content: "Vé xe của tôi",
                                   size: 20,
                                   bold: false,
@@ -244,9 +221,10 @@ class _AccountSceenState extends State<AccountSceen> {
                       ),
                       child: Row(
                         children: [
-                          TextButton(
+                          TextButton.icon(
                             onPressed: () {},
-                            child: const MText(
+                            icon: const Icon(Icons.chat),
+                            label: const MText(
                               content: "Liên hệ",
                               size: 20,
                               bold: false,
@@ -266,9 +244,10 @@ class _AccountSceenState extends State<AccountSceen> {
                       ),
                       child: Row(
                         children: [
-                          TextButton(
+                          TextButton.icon(
                             onPressed: showAlertDialog,
-                            child: const MText(
+                            icon: const Icon(Icons.logout),
+                            label: const MText(
                               content: "Đăng xuất",
                               size: 20,
                               bold: false,
@@ -287,141 +266,6 @@ class _AccountSceenState extends State<AccountSceen> {
           }),
     );
   }
-
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       title: const Text("Tài khoản"),
-  //     ),
-  //     body: Padding(
-  //       padding: const EdgeInsets.symmetric(horizontal: 5),
-  //       child: ListView(
-  //         children: [
-  //           FirebaseAuth.instance.currentUser!.emailVerified
-  //               ? userCard()
-  //               : emailVerification(),
-  //           const SBox(height: 10, width: 0),
-  //           Padding(
-  //             padding: const EdgeInsets.all(10),
-  //             child: Container(
-  //               decoration: BoxDecoration(
-  //                 color: MColors.primaryContainer.withOpacity(.3),
-  //                 borderRadius: BorderRadius.circular(15),
-  //               ),
-  //               child: Column(
-  //                 children: [
-  //                   Row(
-  //                     children: [
-  //                       TextButton(
-  //                         onPressed: () {
-  //                           Navigator.push(
-  //                             context,
-  //                             MaterialPageRoute(
-  //                               builder: (context) => const EditProfile(),
-  //                             ),
-  //                           );
-  //                         },
-  //                         child: const MText(
-  //                           content: "Cập nhật thông tin",
-  //                           size: 20,
-  //                           bold: false,
-  //                           italic: false,
-  //                         ),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                   Row(
-  //                     children: [
-  //                       TextButton(
-  //                         onPressed: () {},
-  //                         child: const MText(
-  //                           content: "Điểm khuyến mãi",
-  //                           size: 20,
-  //                           bold: false,
-  //                           italic: false,
-  //                         ),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                   Row(
-  //                     children: [
-  //                       TextButton(
-  //                         onPressed: () {},
-  //                         child: const MText(
-  //                           content: "Thông báo",
-  //                           size: 20,
-  //                           bold: false,
-  //                           italic: false,
-  //                         ),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                   Row(
-  //                     children: [
-  //                       TextButton(
-  //                         onPressed: () {},
-  //                         child: const MText(
-  //                           content: "Vé xe của tôi",
-  //                           size: 20,
-  //                           bold: false,
-  //                           italic: false,
-  //                         ),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           ),
-  //           Padding(
-  //             padding: const EdgeInsets.all(10),
-  //             child: Container(
-  //               decoration: BoxDecoration(
-  //                 color: MColors.primaryContainer.withOpacity(.3),
-  //                 borderRadius: BorderRadius.circular(10),
-  //               ),
-  //               child: Row(
-  //                 children: [
-  //                   TextButton(
-  //                     onPressed: () {},
-  //                     child: const MText(
-  //                       content: "Liên hệ",
-  //                       size: 20,
-  //                       bold: false,
-  //                       italic: false,
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           ),
-  //           Padding(
-  //             padding: const EdgeInsets.all(10),
-  //             child: Container(
-  //               decoration: BoxDecoration(
-  //                 color: MColors.primaryContainer.withOpacity(.3),
-  //                 borderRadius: BorderRadius.circular(10),
-  //               ),
-  //               child: Row(
-  //                 children: [
-  //                   TextButton(
-  //                     onPressed: showAlertDialog,
-  //                     child: const MText(
-  //                       content: "Đăng xuất",
-  //                       size: 20,
-  //                       bold: false,
-  //                       italic: false,
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 
   Widget userCard(String name, String imgUrl) {
     return GestureDetector(
@@ -463,7 +307,6 @@ class _AccountSceenState extends State<AccountSceen> {
                       Flexible(
                         child: Text(
                           name,
-                          // user.fullName.toString(),
                           style: const TextStyle(fontSize: 25),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,

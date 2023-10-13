@@ -1,4 +1,3 @@
-import 'package:bluebus/models/user.dart';
 import 'package:bluebus/shared/mcolors.dart';
 import 'package:bluebus/shared/mtext.dart';
 import 'package:bluebus/shared/sbox.dart';
@@ -16,35 +15,6 @@ class ProfileInfoScreen extends StatefulWidget {
 }
 
 class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
-  var user = Users(
-      fullName: "",
-      address: "",
-      email: "",
-      phoneNumber: "",
-      profilePhoto:
-          "https://firebasestorage.googleapis.com/v0/b/purplebus-ee57f.appspot.com/o/default_avatar.png?alt=media&token=14653759-47ca-4964-995d-63c0f628e84d&_gl=1*1xdiu81*_ga*NjgzODM5Njg5LjE2ODQ4OTgwNTA.*_ga_CW55HF8NVT*MTY5NjE3NzMzNS4yOS4xLjE2OTYxNzczNDcuNDguMC4w");
-
-  loadUserData() async {
-    var data = await FirebaseFirestore.instance
-        .collection("Users")
-        .doc(FirebaseAuth.instance.currentUser!.email)
-        .get();
-    if (data.exists) {
-      var tempUser = Users(
-          fullName: data["fullName"],
-          address: data["address"],
-          email: data["email"],
-          phoneNumber: data["phoneNumber"],
-          isNewUser: data["isNewUser"],
-          point: data["point"],
-          profilePhoto: data["profilePhoto"]);
-      setState(() {
-        user = tempUser;
-      });
-      // debugPrint(user.toJson().toString());
-    }
-  }
-
   Future<void> showAlertDialog() async {
     return showDialog<void>(
       context: context,
@@ -137,135 +107,179 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
   }
 
   @override
-  void initState() {
-    loadUserData();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Thông tin tài khoản"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-        child: Column(
-          children: [
-            userAvt(),
-            const SBox(height: 25, width: 0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const MText(
-                    content: "Họ tên:", size: 18, bold: false, italic: false),
-                Flexible(
-                  child: Text(
-                    user.fullName.toString(),
-                    maxLines: 2,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: MColors.primary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SBox(height: 15, width: 0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const MText(
-                    content: "Số điện thoại:",
-                    size: 18,
-                    bold: false,
-                    italic: false),
-                Text(
-                  user.phoneNumber.toString(),
-                  style: const TextStyle(
-                    fontSize: 18,
-                    color: MColors.primary,
-                  ),
-                ),
-              ],
-            ),
-            const SBox(height: 15, width: 0),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const MText(
-                    content: "Email:", size: 18, bold: false, italic: false),
-                const SBox(height: 0, width: 20),
-                Flexible(
-                  child: Text(
-                    user.email.toString(),
-                    maxLines: 3,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: MColors.primary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SBox(height: 15, width: 0),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const MText(
-                    content: "Địa chỉ:", size: 18, bold: false, italic: false),
-                const SBox(height: 0, width: 20),
-                Flexible(
-                  child: Text(
-                    user.address.toString(),
-                    maxLines: 5,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      color: MColors.primary,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const Expanded(child: SizedBox()),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const EditProfile()),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: MColors.primary,
-                foregroundColor: MColors.background,
-                minimumSize: const Size.fromHeight(55),
-              ),
-              child: const MText(
-                  content: "Chỉnh sửa thông tin",
-                  size: 18,
-                  bold: false,
-                  italic: false),
-            ),
-            const SBox(height: 10, width: 0),
-            ElevatedButton(
-              onPressed: showAlertDialog,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: MColors.primaryContainer,
-                foregroundColor: MColors.primary,
-                minimumSize: const Size.fromHeight(55),
-              ),
-              child: const MText(
-                  content: "Đăng xuất", size: 18, bold: false, italic: false),
-            ),
-          ],
+        appBar: AppBar(
+          title: const Text("Thông tin tài khoản"),
         ),
-      ),
-    );
+        body: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection("Users")
+                .doc(FirebaseAuth.instance.currentUser!.email)
+                .snapshots(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  child: Column(
+                    children: [
+                      userAvt(snapshot.data["profilePhoto"]),
+                      const SBox(height: 15, width: 0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FirebaseAuth.instance.currentUser!.emailVerified
+                              ? const Icon(
+                                  Icons.check_circle,
+                                  color: Colors.green,
+                                )
+                              : const Icon(
+                                  Icons.warning_amber_rounded,
+                                  color: Colors.red,
+                                ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          MText(
+                              content: FirebaseAuth
+                                      .instance.currentUser!.emailVerified
+                                  ? "Đã xác thực"
+                                  : "Chưa xác thực",
+                              size: 15,
+                              bold: false,
+                              italic: true),
+                        ],
+                      ),
+                      const SBox(height: 35, width: 0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const MText(
+                              content: "Họ tên:",
+                              size: 18,
+                              bold: false,
+                              italic: false),
+                          Flexible(
+                            child: Text(
+                              snapshot.data["fullName"],
+                              maxLines: 2,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: MColors.primary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SBox(height: 15, width: 0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const MText(
+                              content: "Số điện thoại:",
+                              size: 18,
+                              bold: false,
+                              italic: false),
+                          Text(
+                            snapshot.data["phoneNumber"],
+                            style: const TextStyle(
+                              fontSize: 18,
+                              color: MColors.primary,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SBox(height: 15, width: 0),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const MText(
+                              content: "Email:",
+                              size: 18,
+                              bold: false,
+                              italic: false),
+                          const SBox(height: 0, width: 20),
+                          Flexible(
+                            child: Text(
+                              snapshot.data["email"],
+                              maxLines: 3,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: MColors.primary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SBox(height: 15, width: 0),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const MText(
+                              content: "Địa chỉ:",
+                              size: 18,
+                              bold: false,
+                              italic: false),
+                          const SBox(height: 0, width: 20),
+                          Flexible(
+                            child: Text(
+                              snapshot.data["address"],
+                              maxLines: 5,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: MColors.primary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Expanded(child: SizedBox()),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const EditProfile()),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: MColors.primary,
+                          foregroundColor: MColors.background,
+                          minimumSize: const Size.fromHeight(55),
+                        ),
+                        child: const MText(
+                            content: "Chỉnh sửa thông tin",
+                            size: 18,
+                            bold: false,
+                            italic: false),
+                      ),
+                      const SBox(height: 10, width: 0),
+                      ElevatedButton(
+                        onPressed: showAlertDialog,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: MColors.primaryContainer,
+                          foregroundColor: MColors.primary,
+                          minimumSize: const Size.fromHeight(55),
+                        ),
+                        child: const MText(
+                            content: "Đăng xuất",
+                            size: 18,
+                            bold: false,
+                            italic: false),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return const CircularProgressIndicator();
+              }
+            }));
   }
 
-  Widget userAvt() {
+  Widget userAvt(String imgUrl) {
     return Container(
       height: 150,
       width: 150,
@@ -273,7 +287,7 @@ class _ProfileInfoScreenState extends State<ProfileInfoScreen> {
         shape: BoxShape.circle,
         image: DecorationImage(
           fit: BoxFit.cover,
-          image: NetworkImage(user.profilePhoto.toString()),
+          image: NetworkImage(imgUrl),
         ),
       ),
     );
